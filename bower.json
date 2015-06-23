@@ -11,7 +11,7 @@
     "paperkit",
     "drag&drop"
   ],
-  "main": "paperkit-draggable.html",
+  "main": "paperkit-dragcontainer.html",
   "license": "http://paperkit.github.io/LICENSE.txt",
   "homepage": "https://github.com/PaperKit/paperkit-dragcontainer/",
   "ignore": [
