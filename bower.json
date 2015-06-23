@@ -1,0 +1,28 @@
+{
+  "name": "paperkit-dragcontainer",
+  "version": "0.5.0",
+  "authors": [
+    "David María Arribas <dmariaa@datatrends.es>"
+  ],
+  "description": "Paperkit drag&drop container behavior.",
+  "keywords": [
+    "web-components",
+    "behaviors",
+    "paperkit",
+    "drag&drop"
+  ],
+  "main": "paperkit-draggable.html",
+  "license": "http://paperkit.github.io/LICENSE.txt",
+  "homepage": "https://github.com/PaperKit/paperkit-dragcontainer/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*"
+  }
+}
