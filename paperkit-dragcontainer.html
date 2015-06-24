@@ -23,7 +23,6 @@ PaperKit.Behaviors.DragContainerBehavior = {
       this.draggedElement.dragOffsetTop = (event.clientY - this.draggedElement.offsetTop);
       this.draggedElement.dragDeltaX = 0;
       this.draggedElement.dragDeltaY = 0;
-      this.draggedElement.style.zIndex = 1;
       this.startDragging(this.draggedElement, event);
 		  document.addEventListener('mousemove', this.dragMoveBinding); 
 	  }
@@ -50,8 +49,6 @@ PaperKit.Behaviors.DragContainerBehavior = {
 	    delete this.draggedElement.dragOffsetTop;
       delete this.draggedElement.dragDeltaX;
       delete this.draggedElement.dragDeltaY;
-
-	    this.draggedElement.style.zIndex = 0;
 	    this.draggedElement = null;
 	  }
 	},
