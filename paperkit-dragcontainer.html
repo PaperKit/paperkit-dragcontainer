@@ -5,6 +5,13 @@ var PaperKit = PaperKit || {
 };
 
 PaperKit.Behaviors.DragContainerBehavior = {
+  properties: {
+  	dragSpot: {
+  	  type: String,
+  	  reflectToAttribute: true,
+  	  value: ""
+  	}  
+  },
 	ready: function() {
 	  // Init properties
 		this.draggedElement = null;
@@ -15,9 +22,27 @@ PaperKit.Behaviors.DragContainerBehavior = {
 	  document.addEventListener('mousedown', this.dragStartBinding);
 	  document.addEventListener('mouseup', this.dragEndBinding);
 	},
+	getDraggable: function(element) {
+	  if(this.dragSpot && this.dragsSpot != "") {
+	    if(element.classList.contains(this.dragSpot)) {
+			  while (element) {
+			    if(element.isDraggable) {
+			      return element;
+			    }
+		      element = element.parentNode;
+			  }
+	    }
+	 		return false;
+	  } else {
+	    if(element.isDraggable) {
+	    	return element;  
+	    }
+	  }
+	  return false;
+	},
 	dragStart: function(event) {
-	  var el = event.target;
-	  if(el && el.isDraggable) {
+	  var el = this.getDraggable(event.target);
+	  if(el) {
 		  this.draggedElement = el;
       this.draggedElement.dragOffsetLeft = (event.clientX - this.draggedElement.offsetLeft);
       this.draggedElement.dragOffsetTop = (event.clientY - this.draggedElement.offsetTop);
