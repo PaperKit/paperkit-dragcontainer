@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../paperkit-draggable-behavior.html">
+
+<dom-module id="drag-element">
+
+  <style>
+    :host {
+      display: inline-block;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #4285F4;
+      color: #fff;
+      min-height: 100px;
+      min-width: 100px;
+      padding: 16px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'drag-element',
+      
+      behaviors: [
+        PaperKit.Behaviors.DraggableBehavior
+      ]
+    });
+  </script>
+
+</dom-module>

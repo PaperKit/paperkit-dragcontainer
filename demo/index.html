@@ -11,24 +11,38 @@ The complete set of contributors may be found at http://paperkit.github.io/CONTR
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>seed-element Demo</title>
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../seed-element.html">
-  </head>
-  <body>
-
-    <p>An example of <code>&lt;seed-element&gt;</code>:</p>
-
-    <button>Say Something</button>
-
-    <seed-element author='{"name": "Lord Meowser", "image": "http://placekitten.com/g/200/300"}' fancy>
-      <h2>Hello seed-element</h2>
-    </seed-element>
-
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script>
-      document.querySelector('button').addEventListener('click', function() {
-        alert(document.querySelector('seed-element').sayHello('Hallo!'));
-      });
+    window.Polymer = window.Polymer || {};
+    window.Polymer.dom = 'shadow';
     </script>
+    <link rel="import" href="dragcontainer-element.html">    
+    <link rel="import" href="drag-element.html">
+  </head>
+  <body style="margin: 10px; padding: 0;">
+  	<drag-container style="width: 500px; height: 500px; border: 1px dashed grey;" restricted>
+			<drag-element drag-spot="smalldiv">
+				<div id="spot" class="smalldiv" style="white-space: nowrap; display: inline-block;">X</div><br/>
+				<span style="white-space: nowrap;">HOLA CARACOLA</span>
+			</drag-element>
+		</drag-container>
+	<script>	
+		function _dragStart(event) {
+			// console.debug('drag-start');
+		}
+		
+		function _drag(event) {
+		  // console.debug('drag');
+		}
+		
+		function _dragEnd(event) {
+		  // console.debug('drag-end');
+		}
 
+		var element = document.querySelector('drag-element');
+		element.addEventListener('drag-start', _dragStart);
+		element.addEventListener('drag', _drag);
+		element.addEventListener('drag-end', _dragEnd);
+	</script>
   </body>
 </html>

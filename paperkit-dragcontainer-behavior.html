@@ -1,0 +1,52 @@
+<!--
+@license
+Copyright (c) The PaperKit Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://http://paperkit.github.io/LICENSE.txt
+The complete set of authors may be found at http://paperkit.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://paperkit.github.io/CONTRIBUTORS.txt
+-->
+<script>
+var PaperKit = PaperKit || {
+  Behaviors: { },
+  Tools: { }
+};
+
+PaperKit.Behaviors.DragContainerBehavior = {
+  properties: {
+    limitsRect: {
+      type: Object,
+      value: null
+    },
+    restricted: {
+      type: Boolean,
+      reflectToAttribute: true,
+      value: false
+    }
+  },
+  
+  ready: function() {
+  },
+  
+  listeners: {
+		'drag-start': '_dragStart',
+		'drag': '_drag',
+		'drag-end': '_dragEnd'
+  },
+	
+	_dragStart: function(event) {
+	  if(!this.limitsRect || this.limitsRect===null) {
+	    this.limitsRect = this.getBoundingClientRect();
+	  }
+	},
+	_drag: function(event) {
+	  if(this.restricted) {
+	 	  var width = event.target.offsetWidth;
+	 	  var height = event.target.clientHeight;	  	  
+		  event.detail.x = (event.detail.x <= this.limitsRect.left) ? this.limitsRect.left : event.detail.x;
+		  event.detail.x = (event.detail.x + width >= this.limitsRect.right) ? this.limitsRect.right - width : event.detail.x;	  
+			event.detail.y = (event.detail.y <= this.limitsRect.top) ? this.limitsRect.top : event.detail.y;	    						
+			event.detail.y = (event.detail.y + height >= this.limitsRect.bottom) ? this.limitsRect.bottom - height : event.detail.y;	    
+	  }
+	}
+};
+</script>

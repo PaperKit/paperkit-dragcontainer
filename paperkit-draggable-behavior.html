@@ -1,0 +1,170 @@
+<!--
+@license
+Copyright (c) The PaperKit Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://http://paperkit.github.io/LICENSE.txt
+The complete set of authors may be found at http://paperkit.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://paperkit.github.io/CONTRIBUTORS.txt
+@author David María Arribas dmariaa70@gmail.com
+-->
+<script>
+var PaperKit = PaperKit || {
+  Behaviors: { },
+  Tools: { }
+};
+
+
+PaperKit.Tools.DragInfo = function() {
+ 	var startX =  0,
+			startY =  0,
+			offsetX = 0,
+			offsetY = 0;
+	
+	function _start(x, y) {
+	  startX = x;
+	  startY = y;
+	};
+	
+	function _moveTo(x, y) {
+	  offsetX = x - startX;
+	  offsetY = y - startY;
+	};
+	
+	function _reset() {
+		startX = 0;
+	 	startY = 0;
+	  offsetX = 0;
+	  offsetY = 0;
+	};
+	
+	function _clone() {
+	  var clon = PaperKit.Tools.DragInfo();
+	  clon.startX = startX;
+	  clon.startY = startY;
+	  clon.offsetX = offsetX;
+	  clon.offsetY = offsetY;
+	  return clon;
+	}
+	
+	function _toString() {
+	  var res = "" 
+	  res += "offset[" + offsetX +  "," + offsetY + "]";
+	  res += "start[" + startX +  "," + startY + "]";	  
+	  return res;
+	};
+	  
+  var dragSpot = {		
+		start: _start,
+		moveTo: _moveTo,
+		reset: _reset,
+		clone: _clone,
+		toString: _toString
+	};
+	
+	Object.defineProperty(dragSpot, 'offsetX', { get: function() { return offsetX; } });
+	Object.defineProperty(dragSpot, 'offsetY', { get: function() { return offsetY; } });
+	Object.defineProperty(dragSpot, 'startX', { get: function() { return startX; } });
+	Object.defineProperty(dragSpot, 'startY', { get: function() { return startY; } });
+  
+  return dragSpot;
+}
+
+PaperKit.Behaviors.DraggableBehavior = {
+	properties: {
+  	dragSpot: {
+  	  type: String,
+  	  reflectToAttribute: true,
+  	  value: "",
+  	  observer: '_changeDragSpot'
+  	},
+  	_dragging: {
+  	  type: Boolean,
+  	  value: false
+  	},
+    _dragStartBinding: {
+      type: Function,
+      value: function() { return this._dragStart.bind(this); }
+    },
+    _dragBinding: {
+      type: Function,
+      value: function() { return this._drag.bind(this); }
+    },
+    _dragEndBinding: {
+      type: Function,
+      value: function() { return this._dragEnd.bind(this); }
+    },
+    _dragElement: {
+      type: Object,
+      value: null
+    },
+    _dragInfo: {
+      type: Object,
+      value: PaperKit.Tools.DragInfo()
+    }
+	},
+	
+	// Lifecycle
+	ready: function() {
+    this._setListeners(this.dragSpot);	  
+	},
+	
+	detach: function() {
+	 	if(this._dragElement && this._dragElement !== null) {
+			this._dragElement.removeEventListener('mousedown', this._dragStartBinding);
+		}	  
+	},
+		
+	// Behavior
+	_changeDragSpot: function(newvalue, oldvalue) {    
+    this._setListeners(newvalue);	  	  
+	},
+	_setListeners: function(spotclass) {
+	  var spot = spotclass==='' ? this : (Polymer.dom(this).querySelector('.' + spotclass) || this);	  
+	 	if(this._dragElement && this._dragElement !== null) {
+	 	 this._dragElement.removeEventListener('mousedown', this._dragStartBinding);
+	 	}
+	 	this._dragElement = spot;
+	 	this._dragElement.addEventListener('mousedown', this._dragStartBinding);
+	 	this._dragElement.style.cursor = 'move';
+	},	
+	_dragStart: function(event) {
+	  // drag-start event is cancellable
+	  if(!this.fire('drag-start',{},{ node: this, bubbles: true, cancelable: true }).defaultPrevented) {
+		  document.addEventListener('mousemove', this._dragBinding);
+		  document.addEventListener('mouseup', this._dragEndBinding);
+		  this._dragging = true;
+		  var rect = this.getBoundingClientRect();
+		  this._dragOffset = { left: event.clientX - rect.left, top: event.clientY - rect.top };
+		  this._dragInfo.start(event.clientX - this._dragOffset.left, event.clientY - this._dragOffset.top );	  	    
+	  }
+	},
+	_drag: function(event) {
+	  if(this._dragging) {
+	    var desp = { x: event.clientX - this._dragOffset.left, y: event.clientY - this._dragOffset.top };
+	    // drag event is cancellable
+	    if(!this.fire('drag',desp,{ node: this, bubbles: true, cancelable: true }).defaultPrevented) {	 	      
+	     	this._dragInfo.moveTo(desp.x, desp.y);
+		    this.translate3d(this._dragInfo.offsetX + "px", this._dragInfo.offsetY + "px", "0px");	      
+	    }	    
+	  }	  
+	},
+	_dragEnd: function(event) {
+	  if(this._dragging) {	    
+	    // Place the object
+	    this.style.left = this.offsetLeft + this._dragInfo.offsetX + 'px';
+	    this.style.top = this.offsetTop + this._dragInfo.offsetY + 'px';	    
+	    this.transform('');
+	    	    
+	    // Remove listeners
+		  document.removeEventListener('mousemove', this._dragBinding);
+		  document.removeEventListener('mouseup', this._dragEndBinding);
+
+		  // We are no more dragging
+	    this._dragging = false;	    
+		  this._dragInfo.reset();
+		  
+	    // drag-end event is not cancellable or we could leave state broken...
+	    this.fire('drag-end', this._dragInfo, { node: this, bubbles: true, cancelable: false });
+	  }
+	}
+};
+</script>

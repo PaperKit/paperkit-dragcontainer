@@ -4,14 +4,17 @@
   "authors": [
     "David María Arribas <dmariaa@datatrends.es>"
   ],
-  "description": "Paperkit drag&drop container behavior.",
+  "description": "Paperkit drag&drop behaviors.",
   "keywords": [
     "web-components",
     "behaviors",
     "paperkit",
     "drag&drop"
   ],
-  "main": "paperkit-dragcontainer.html",
+  "main": [
+  	"paperkit-dragcontainer-behavior.html",
+  	"paperkit-draggable-behavior.html"
+  ],
   "license": "http://paperkit.github.io/LICENSE.txt",
   "homepage": "https://github.com/PaperKit/paperkit-dragcontainer/",
   "ignore": [

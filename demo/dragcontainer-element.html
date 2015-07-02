@@ -1,0 +1,27 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../paperkit-dragcontainer-behavior.html">
+
+<dom-module id="drag-container">
+
+  <style>
+    :host {
+      display: inline-block;
+      position: absolute;
+    }
+  </style>
+
+  <template>
+    <content></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'drag-container',
+      
+      behaviors: [
+        PaperKit.Behaviors.DragContainerBehavior
+      ]
+    });
+  </script>
+
+</dom-module>
